@@ -28,8 +28,8 @@ public class BurmeseGoldWeight {
 
     public static final RoundingMode DEFAULT_ROUND_MODE = RoundingMode.HALF_DOWN;
 
-    final int patetha, kyat, pae;
-    final BigDecimal yway;
+    private final int patetha, kyat, pae;
+    private final BigDecimal yway;
 
 
     public BurmeseGoldWeight(){
