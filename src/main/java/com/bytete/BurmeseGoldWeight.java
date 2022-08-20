@@ -28,8 +28,8 @@ public class BurmeseGoldWeight {
 
     public static final RoundingMode DEFAULT_ROUND_MODE = RoundingMode.HALF_DOWN;
 
-    int patetha, kyat, pae;
-    BigDecimal yway;
+    final int patetha, kyat, pae;
+    final BigDecimal yway;
 
 
     public BurmeseGoldWeight(){
@@ -44,12 +44,27 @@ public class BurmeseGoldWeight {
         this(burmeseGoldWeight.patetha, burmeseGoldWeight.kyat, burmeseGoldWeight.pae, burmeseGoldWeight.yway);
     }
 
-    public BurmeseGoldWeight(long gram){
+
+    public BurmeseGoldWeight(SIWeight siWeight){
+        this(siWeight.gram.doubleValue());
+    }
+
+    public BurmeseGoldWeight(double gram){
         BurmeseGoldWeight w = fromGram(gram);
         this.kyat = w.kyat;
         this.pae = w.pae;
         this.yway = w.yway;
         this.patetha = w.patetha;
+    }
+
+    public BurmeseGoldWeight add(BurmeseGoldWeight weight){
+        BigDecimal k = toKyat().add(weight.toKyat());
+        return kyatToBurmeseWeight(k);
+    }
+
+    public BurmeseGoldWeight substract(BurmeseGoldWeight weight){
+        BigDecimal k = toKyat().subtract(weight.toKyat());
+        return kyatToBurmeseWeight(k);
     }
 
     public BurmeseGoldWeight(int patetha, int kyat, int pae, double yway) {
@@ -85,9 +100,9 @@ public class BurmeseGoldWeight {
         return toPae().multiply(ONE_KYAT_IN_GRAM.divide(ONE_KYAT_IN_PAE, precision)).round(precision);
     }
 
-    private BurmeseGoldWeight fromGram(long gram){
-        BigDecimal k = BigDecimal.valueOf(gram).multiply(ONE_PAE_IN_GRAM).divide(ONE_KYAT_IN_PAE, precision);
-        return new BurmeseGoldWeight();
+    private BurmeseGoldWeight fromGram(double gram){
+        BigDecimal k = BigDecimal.valueOf(gram).divide(ONE_KYAT_IN_GRAM, precision);
+        return kyatToBurmeseWeight(k);
     }
 
 
@@ -98,23 +113,31 @@ public class BurmeseGoldWeight {
 
         BigDecimal subtractPatethaAndKyat = pt.multiply(ONE_PATETHA_IN_KYAT).add(k);
         p = kyat.subtract(subtractPatethaAndKyat).multiply(ONE_KYAT_IN_PAE).setScale(0, RoundingMode.DOWN);
-        y = kyat.subtract(subtractPatethaAndKyat).subtract(p.divide(ONE_KYAT_IN_PAE)).multiply(ONE_PAE_IN_YWAY);
+        y = kyat.subtract(subtractPatethaAndKyat).subtract(p.divide(ONE_KYAT_IN_PAE)).multiply(ONE_KYAT_IN_YWAY);
 
         return new BurmeseGoldWeight(pt.intValue(), k.intValue(), p.intValue(), y);
     }
 
-    public BurmeseGoldWeight byBurmeseGoldQuality(double quality) {
-        if(quality > 16) throw new GoldQualityOutOfBound("Maximum Burmese gold quality is 16ပဲရည်");
-        BigDecimal purifiedWeight = toKyat().divide(ONE_KYAT_IN_PAE).multiply(BigDecimal.valueOf(quality)).round(precision);
+    public BurmeseGoldWeight byBurmeseGoldQuality(double paeyay) {
+        if(paeyay > 16) throw new GoldQualityOutOfBound("Maximum Burmese gold quality is 16ပဲရည်");
+        BigDecimal purifiedWeight = toKyat().divide(ONE_KYAT_IN_PAE).multiply(BigDecimal.valueOf(paeyay)).round(precision);
         return kyatToBurmeseWeight(purifiedWeight);
     }
 
-    public BurmeseGoldWeight byInternationalGoldQuality(double quality) {
-        if(quality > 24) throw new GoldQualityOutOfBound("Maximum International gold quality is 24K");
-        BigDecimal burmeseQuality = BigDecimal.valueOf(quality).divide(BigDecimal.valueOf(24), precision).multiply(ONE_KYAT_IN_PAE);
+    public BurmeseGoldWeight byInternationalGoldQuality(double k) {
+        if(k > 24) throw new GoldQualityOutOfBound("Maximum International gold quality is 24K");
+        BigDecimal burmeseQuality = BigDecimal.valueOf(k).divide(BigDecimal.valueOf(24), precision).multiply(ONE_KYAT_IN_PAE);
         return byBurmeseGoldQuality(burmeseQuality.doubleValue());
     }
 
+
+    public BigDecimal getBurmeseMarketValuePrice(double burmeseGoldSpotPrice){
+        return toKyat().multiply(BigDecimal.valueOf(burmeseGoldSpotPrice));
+    }
+
+    public BigDecimal getBurmeseMarketValuePrice(double burmeseGoldSpotPrice, double marketGaps){
+        return toKyat().multiply(BigDecimal.valueOf(burmeseGoldSpotPrice - marketGaps));
+    }
 
 
     @Override
@@ -131,6 +154,6 @@ public class BurmeseGoldWeight {
             case PATETHA: return toPatetha() + " ပိဿာ";
             case GRAM: return toGram() + " gram";
         }
-        return this.patetha + "ပိသာ, " + this.kyat +"ကျပ်, " + this.pae + "ပဲ, " + this.yway.round(precision) + "ရွေး ";
+        return toString();
     }
 }

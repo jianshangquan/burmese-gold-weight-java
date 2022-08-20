@@ -1,11 +1,19 @@
 package com.bytete;
 
-import com.bytete.Exceptions.GoldQualityOutOfBound;
+import java.math.BigDecimal;
 
 public class App 
 {
     public static void main( String[] args ) {
-        BurmeseGoldWeight weight = new BurmeseGoldWeight(1000,99,15,0);
-        System.out.println(weight.byBurmeseGoldQuality(16).print(BurmeseGoldWeight.PrintType.PATETHA));
+        BurmeseGoldWeight gold = new BurmeseGoldWeight(0,1,0,0);
+        BurmeseGoldWeight waste = new BurmeseGoldWeight(0, 0, 1, 2);
+
+        BigDecimal total = gold.byBurmeseGoldQuality(15)
+                               .add(waste)
+                               .getBurmeseMarketValuePrice(3000000, 25000);
+
+        System.out.println(gold.byBurmeseGoldQuality(15).substract(waste));
+
+
     }
 }
