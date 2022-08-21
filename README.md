@@ -14,6 +14,7 @@
 1. BurmeseGoldWeight is immutable
 2. Use BigDecimal for calculation due to [Floating point error in computing](https://betterprogramming.pub/why-is-0-1-0-2-not-equal-to-0-3-in-most-programming-languages-99432310d476)
 
+#### Usage
 ```java
   // Usage
 
@@ -53,13 +54,13 @@
 
 
 
-    // Printing
-    ringWithCopper.toString(); // Output: "0ပိဿာ 1ကျပ် 0ပဲ 0ရွေး";
-    ringWithCopper.print(BurmeseGoldWeight.PrintType.PATETHA); // Output: "0.01ပိဿာ"
-    ringWithCopper.print(BurmeseGoldWeight.PrintType.KYAT); // Output: "1ကျပ်"
-    ringWithCopper.print(BurmeseGoldWeight.PrintType.PAE); // Output: "16ပဲ"
-    ringWithCopper.print(BurmeseGoldWeight.PrintType.YWAY); // Output: "128ရွေး"
-    ringWithCopper.print(BurmeseGoldWeight.PrintType.GRAM); // Output: "16.66666666ဂရမ်"
+  // Printing
+  ringWithCopper.toString(); // Output: "0ပိဿာ 1ကျပ် 0ပဲ 0ရွေး";
+  ringWithCopper.print(BurmeseGoldWeight.PrintType.PATETHA); // Output: "0.01ပိဿာ"
+  ringWithCopper.print(BurmeseGoldWeight.PrintType.KYAT); // Output: "1ကျပ်"
+  ringWithCopper.print(BurmeseGoldWeight.PrintType.PAE); // Output: "16ပဲ"
+  ringWithCopper.print(BurmeseGoldWeight.PrintType.YWAY); // Output: "128ရွေး"
+  ringWithCopper.print(BurmeseGoldWeight.PrintType.GRAM); // Output: "16.66666666ဂရမ်"
 ```
 
 
