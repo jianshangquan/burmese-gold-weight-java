@@ -1,4 +1,4 @@
-# burmese-weight-java
+# burmese-gold-weight-java
 
 
 ### Ported languages
